@@ -6,9 +6,9 @@ const slotScreenArrays = [
   // [12, 7, "triple Bar", "double Bar", "single Bar", "anyBar", "cherry"],
   // [12, 7, "triple Bar", "double Bar", "single Bar", "anyBar", "cherry"],
   // [12, 7, "triple Bar", "double Bar", "single Bar", "anyBar", "cherry"],
-  [12, 7],
-  [12, 7],
-  [12, 7],
+  [12, "cherry"],
+  [12, "cherry"],
+  [12, "cherry"],
 ];
 
 const state = {
@@ -70,6 +70,7 @@ const MaxCreditsPlayed = () => {
 const handleSpin = (cd) => {
   // random pics will show inside each slot box
   if (state.creditsPlayed === 0) return;
+
   // Get an array of values from slotScreenArrays
 
   const shuffleAndGetValue = (arr) => {
@@ -86,43 +87,74 @@ const handleSpin = (cd) => {
   thirdSlotBox.innerText = thirdValue;
 
   const payoutMapping = {
-    12: 100,
+    12: 2500,
     7: 50,
     "triple Bar": 30,
     "double Bar": 20,
     "single Bar": 10,
+    cherry: 10,
     anyBar: 5,
-    cherry: 2,
   };
 
+  // if (firstValue === secondValue && secondValue === thirdValue) {
+  //   state.winnerPaid = payoutMapping[firstValue] * state.creditsPlayed || 0;
+  //   winnerPaidScore.innerText = state.winnerPaid;
+  // } else if (
+  //   (firstValue === secondValue && secondValue === "cherry") ||
+  //   (firstValue === thirdValue && thirdValue === "cherry") ||
+  //   (secondValue === thirdValue && thirdValue === "cherry")
+  // ) {
+  //   state.winnerPaid = 5 * state.creditsPlayed || 0;
+  //   winnerPaidScore.innerText = state.winnerPaid;
+  // } else if (
+  //   secondValue === "cherry" ||
+  //   firstValue === "cherry" ||
+  //   thirdValue === "cherry"
+  // ) {
+  //   state.winnerPaid = 2 * state.creditsPlayed || 0;
+  //   winnerPaidScore.innerText = state.winnerPaid;
+  // }
+
+  let payout = 0;
+
   if (firstValue === secondValue && secondValue === thirdValue) {
-    state.winnerPaid += payoutMapping[firstValue] || 0;
-    winnerPaidScore.innerText = state.winnerPaid;
+    payout = payoutMapping[firstValue] || 0;
+  } else {
+    const cherryCount = [firstValue, secondValue, thirdValue].filter(
+      (value) => value === "cherry"
+    ).length;
+    console.log(cherryCount);
+
+    if (cherryCount === 2) {
+      payout = 5;
+    } else if (cherryCount === 1) {
+      payout = 2;
+    }
   }
 
-  // ------------------------------------
-  // callback function to reset the scores
-  setTimeout(() => {
-    cd();
-  }, 3000);
-  // state.creditsPlayed = 0;
-  // creditsPlayedScore.innerText = state.creditsPlayed;
-  // state.winnerPaid = 0;
-  // winnerPaidScore.innerText = state.winnerPaid;
+  state.winnerPaid = payout * state.creditsPlayed;
+  winnerPaidScore.innerText = state.winnerPaid;
+
+  creditsScore.innerText =
+    parseInt(creditsScore.innerText) - parseInt(creditsPlayedScore.innerText);
+
+  (state.creditsPlayed = 0),
+    (creditsPlayedScore.innerText = state.creditsPlayed),
+    // callback function to reset the scores
+    setTimeout(() => {
+      cd();
+    }, 3000);
 };
 
 const winnerAndCreditPlayedScoreReset = () => {
   creditsScore.innerText =
-    parseInt(creditsScore.innerText) -
-    parseInt(creditsPlayedScore.innerText) +
-    parseInt(winnerPaidScore.innerText);
-  console.log("w", winnerPaidScore.innerText);
-  console.log("c", creditsScore.innerText);
+    parseInt(creditsScore.innerText) + parseInt(winnerPaidScore.innerText);
 
-  (state.creditsPlayed = 0),
-    (creditsPlayedScore.innerText = state.creditsPlayed),
-    (state.winnerPaid = 0),
-    (winnerPaidScore.innerText = state.winnerPaid);
+  console.log("winnerPaidScore", winnerPaidScore.innerText);
+  console.log(state.winnerPaid);
+  console.log("creditsScore", creditsScore.innerText);
+
+  (state.winnerPaid = 0), (winnerPaidScore.innerText = state.winnerPaid);
 };
 
 /*----- event listeners -----*/
