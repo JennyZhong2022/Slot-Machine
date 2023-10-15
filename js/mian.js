@@ -3,13 +3,23 @@
 /*----- app's state (variables) -----*/
 
 const slotScreenArrays = [
+  // [25, 7, "triple Bar", "double Bar", "single Bar", "anyBar", "cherry"],
   // [12, 7, "triple Bar", "double Bar", "single Bar", "anyBar", "cherry"],
   // [12, 7, "triple Bar", "double Bar", "single Bar", "anyBar", "cherry"],
-  // [12, 7, "triple Bar", "double Bar", "single Bar", "anyBar", "cherry"],
-  [12, "cherry"],
-  [12, "cherry"],
-  [12, "cherry"],
+  [25, 7, "cherry"],
+  [25, 7, "cherry"],
+  [25, 7, "cherry"],
 ];
+
+const imageLookup = {
+  25: new Image(),
+  7: new Image(),
+  cherry: new Image(),
+};
+
+imageLookup["25"].src = "../imgs/poker-chip.png";
+imageLookup["7"].src = "../imgs/seven.png";
+imageLookup["cherry"].src = "../imgs/cherries.png";
 
 const state = {
   winnerPaid: 0,
@@ -17,6 +27,13 @@ const state = {
   creditsPlayed: 0,
 };
 
+const slotScreenArraysWithImages = slotScreenArrays.map((subArray) => {
+  return subArray.map((item) => {
+    return imageLookup[item] || item; // If no image found, return the original item
+  });
+});
+
+console.log(slotScreenArraysWithImages);
 /*----- cached element references -----*/
 
 const firstSlotBox = document.querySelector("#firstSlotBox");
@@ -25,10 +42,21 @@ const secondSlotBox = document.querySelector("#secondSlotBox");
 
 const thirdSlotBox = document.querySelector("#thirdSlotBox");
 
-firstSlotBox.innerText = slotScreenArrays[0][1];
-secondSlotBox.innerText = slotScreenArrays[0][1];
-thirdSlotBox.innerText = slotScreenArrays[0][1];
+// A single DOM node (like an Image object) can only exist in one location in the DOM tree. So when you try to append it to a second location, it gets removed from the first.Using cloneNode(true) creates a deep clone of the image,
 
+firstSlotBox.appendChild(slotScreenArraysWithImages[0][1].cloneNode(true));
+secondSlotBox.appendChild(slotScreenArraysWithImages[0][1].cloneNode(true));
+thirdSlotBox.appendChild(slotScreenArraysWithImages[0][1].cloneNode(true));
+
+console.log(firstSlotBox);
+console.log(secondSlotBox);
+console.log(thirdSlotBox);
+
+const firstSlotImg = document.querySelector("#firstSlotBox img");
+
+const secondSlotImg = document.querySelector("#secondSlotBox img");
+
+const thirdSlotImg = document.querySelector("#thirdSlotBox img");
 /*----- cached element references -----*/
 
 const winnerPaidScore = document.querySelector("#winnerPaid");
@@ -68,26 +96,39 @@ const MaxCreditsPlayed = () => {
 };
 
 const handleSpin = (cd) => {
-  // random pics will show inside each slot box
   if (state.creditsPlayed === 0) return;
 
-  // Get an array of values from slotScreenArrays
+  // random pics will show inside each slot box
 
   const shuffleAndGetValue = (arr) => {
     const shuffled = [...arr].sort(() => 0.5 - Math.random());
     return shuffled[0];
   };
 
-  const firstValue = shuffleAndGetValue(slotScreenArrays[0]);
-  const secondValue = shuffleAndGetValue(slotScreenArrays[1]);
-  const thirdValue = shuffleAndGetValue(slotScreenArrays[2]);
+  const firstValue = shuffleAndGetValue(slotScreenArraysWithImages[0]);
+  const secondValue = shuffleAndGetValue(slotScreenArraysWithImages[1]);
+  const thirdValue = shuffleAndGetValue(slotScreenArraysWithImages[2]);
 
-  firstSlotBox.innerText = firstValue;
-  secondSlotBox.innerText = secondValue;
-  thirdSlotBox.innerText = thirdValue;
+  if (firstSlotImg) {
+    firstSlotImg.src = firstValue.src;
+  }
+
+  if (secondSlotImg) {
+    secondSlotImg.src = secondValue.src;
+  }
+
+  if (thirdSlotImg) {
+    thirdSlotImg.src = thirdValue.src;
+  }
+
+  console.log(firstValue);
+  console.log(secondValue);
+  console.log(thirdValue);
+
+  // credits calculation
 
   const payoutMapping = {
-    12: 2500,
+    25: 2500,
     7: 50,
     "triple Bar": 30,
     "double Bar": 20,
@@ -96,34 +137,24 @@ const handleSpin = (cd) => {
     anyBar: 5,
   };
 
-  // if (firstValue === secondValue && secondValue === thirdValue) {
-  //   state.winnerPaid = payoutMapping[firstValue] * state.creditsPlayed || 0;
-  //   winnerPaidScore.innerText = state.winnerPaid;
-  // } else if (
-  //   (firstValue === secondValue && secondValue === "cherry") ||
-  //   (firstValue === thirdValue && thirdValue === "cherry") ||
-  //   (secondValue === thirdValue && thirdValue === "cherry")
-  // ) {
-  //   state.winnerPaid = 5 * state.creditsPlayed || 0;
-  //   winnerPaidScore.innerText = state.winnerPaid;
-  // } else if (
-  //   secondValue === "cherry" ||
-  //   firstValue === "cherry" ||
-  //   thirdValue === "cherry"
-  // ) {
-  //   state.winnerPaid = 2 * state.creditsPlayed || 0;
-  //   winnerPaidScore.innerText = state.winnerPaid;
-  // }
+  function getKeyByValue(object, value) {
+    const entry = Object.entries(object).find(([key, val]) => val === value);
+    return entry && entry[0];
+  }
+
+  const firstKey = getKeyByValue(imageLookup, firstValue);
+  const secondKey = getKeyByValue(imageLookup, secondValue);
+  const thirdKey = getKeyByValue(imageLookup, thirdValue);
 
   let payout = 0;
 
-  if (firstValue === secondValue && secondValue === thirdValue) {
-    payout = payoutMapping[firstValue] || 0;
+  if (firstKey === secondKey && secondKey === thirdKey) {
+    payout = payoutMapping[firstKey] || 0;
   } else {
-    const cherryCount = [firstValue, secondValue, thirdValue].filter(
+    const cherryCount = [firstKey, secondKey, thirdKey].filter(
       (value) => value === "cherry"
     ).length;
-    console.log(cherryCount);
+    // console.log(cherryCount);
 
     if (cherryCount === 2) {
       payout = 5;
@@ -132,7 +163,7 @@ const handleSpin = (cd) => {
     }
   }
 
-  state.winnerPaid = payout * state.creditsPlayed;
+  state.winnerPaid += payout * state.creditsPlayed;
   winnerPaidScore.innerText = state.winnerPaid;
 
   creditsScore.innerText =
@@ -146,13 +177,15 @@ const handleSpin = (cd) => {
     }, 3000);
 };
 
+// callback function below to reset the scores
+
 const winnerAndCreditPlayedScoreReset = () => {
   creditsScore.innerText =
     parseInt(creditsScore.innerText) + parseInt(winnerPaidScore.innerText);
 
-  console.log("winnerPaidScore", winnerPaidScore.innerText);
-  console.log(state.winnerPaid);
-  console.log("creditsScore", creditsScore.innerText);
+  // console.log("winnerPaidScore", winnerPaidScore.innerText);
+  // console.log(state.winnerPaid);
+  // console.log("creditsScore", creditsScore.innerText);
 
   (state.winnerPaid = 0), (winnerPaidScore.innerText = state.winnerPaid);
 };
