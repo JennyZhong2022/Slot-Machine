@@ -3,22 +3,30 @@
 /*----- app's state (variables) -----*/
 
 const slotScreenArrays = [
-  // [25, 7, "triple Bar", "double Bar", "single Bar", "anyBar", "cherry"],
-  // [12, 7, "triple Bar", "double Bar", "single Bar", "anyBar", "cherry"],
-  // [12, 7, "triple Bar", "double Bar", "single Bar", "anyBar", "cherry"],
-  [25, 7, "cherry"],
-  [25, 7, "cherry"],
-  [25, 7, "cherry"],
+  [25, 7, "diamond", "machine", "apple", "lemon", "cherry"],
+  [25, 7, "diamond", "machine", , "apple", "lemon", "cherry"],
+  [25, 7, "diamond", "machine", , "apple", "lemon", "cherry"],
+  // [25, 7, "cherry"],
+  // [25, 7, "cherry"],
+  // [25, 7, "cherry"],
 ];
 
 const imageLookup = {
   25: new Image(),
   7: new Image(),
+  diamond: new Image(),
+  machine: new Image(),
+  apple: new Image(),
+  lemon: new Image(),
   cherry: new Image(),
 };
 
-imageLookup["25"].src = "../imgs/poker-chip.png";
+imageLookup["25"].src = "../imgs/casino-chip.png";
 imageLookup["7"].src = "../imgs/seven.png";
+imageLookup["diamond"].src = "../imgs/diamond.png";
+imageLookup["machine"].src = "../imgs/machine.png";
+imageLookup["apple"].src = "../imgs/apple.png";
+imageLookup["lemon"].src = "../imgs/lemon.png";
 imageLookup["cherry"].src = "../imgs/cherries.png";
 
 const state = {
@@ -44,13 +52,10 @@ const thirdSlotBox = document.querySelector("#thirdSlotBox");
 
 // A single DOM node (like an Image object) can only exist in one location in the DOM tree. So when you try to append it to a second location, it gets removed from the first.Using cloneNode(true) creates a deep clone of the image,
 
-firstSlotBox.appendChild(slotScreenArraysWithImages[0][1].cloneNode(true));
-secondSlotBox.appendChild(slotScreenArraysWithImages[0][1].cloneNode(true));
-thirdSlotBox.appendChild(slotScreenArraysWithImages[0][1].cloneNode(true));
-
-console.log(firstSlotBox);
-console.log(secondSlotBox);
-console.log(thirdSlotBox);
+firstSlotBox.appendChild(slotScreenArraysWithImages[0][0].cloneNode(true));
+secondSlotBox.appendChild(slotScreenArraysWithImages[0][0].cloneNode(true));
+thirdSlotBox.appendChild(slotScreenArraysWithImages[0][0].cloneNode(true));
+/*----- cached element references -----*/
 
 const firstSlotImg = document.querySelector("#firstSlotBox img");
 
@@ -86,7 +91,6 @@ const spinButton = document.querySelector("#spin");
 const addCreditsPlayed = () => {
   state.creditsPlayed = (state.creditsPlayed % 3) + 1;
   creditsPlayedScore.innerText = state.creditsPlayed;
-  console.log(state.creditsPlayed);
 };
 
 // cb will be spin function
@@ -128,19 +132,23 @@ const handleSpin = (cd) => {
   // credits calculation
 
   const payoutMapping = {
-    25: 2500,
+    25: 100,
     7: 50,
-    "triple Bar": 30,
-    "double Bar": 20,
-    "single Bar": 10,
-    cherry: 10,
-    anyBar: 5,
+    diamond: 30,
+    machine: 20,
+    apple: 10,
+    lemon: 10,
+    cherry: 5,
   };
 
-  function getKeyByValue(object, value) {
-    const entry = Object.entries(object).find(([key, val]) => val === value);
-    return entry && entry[0];
-  }
+  const getKeyByValue = (object, value) => {
+    for (let key in object) {
+      if (object[key] === value) {
+        return key; // we found it
+      }
+    }
+    return null; // we didn't find it
+  };
 
   const firstKey = getKeyByValue(imageLookup, firstValue);
   const secondKey = getKeyByValue(imageLookup, secondValue);
@@ -163,7 +171,7 @@ const handleSpin = (cd) => {
     }
   }
 
-  state.winnerPaid += payout * state.creditsPlayed;
+  state.winnerPaid = payout * state.creditsPlayed;
   winnerPaidScore.innerText = state.winnerPaid;
 
   creditsScore.innerText =
@@ -174,20 +182,57 @@ const handleSpin = (cd) => {
     // callback function to reset the scores
     setTimeout(() => {
       cd();
-    }, 3000);
+    }, 1000);
 };
 
 // callback function below to reset the scores
 
 const winnerAndCreditPlayedScoreReset = () => {
-  creditsScore.innerText =
-    parseInt(creditsScore.innerText) + parseInt(winnerPaidScore.innerText);
+  let currentCredits = parseInt(creditsScore.innerText, 10);
+  const incrementValue = parseInt(winnerPaidScore.innerText, 10);
+  const targetValue = currentCredits + incrementValue;
 
-  // console.log("winnerPaidScore", winnerPaidScore.innerText);
-  // console.log(state.winnerPaid);
-  // console.log("creditsScore", creditsScore.innerText);
+  const interval = setInterval(() => {
+    // Only increment if winnerPaidScore is greater than 0
+    if (incrementValue > 0) {
+      spinButton.setAttribute("disabled", "");
+      currentCredits++;
+      creditsScore.innerText = currentCredits;
+    }
+
+    // Stop when reaching the target
+    if (currentCredits >= targetValue) {
+      clearInterval(interval);
+      spinButton.removeAttribute("disabled");
+    }
+  }, 300);
+
+  // creditsScore.innerText =
+  //   parseInt(creditsScore.innerText) + parseInt(winnerPaidScore.innerText);
+
+  console.log("winnerPaidScore", winnerPaidScore.innerText);
+  console.log("state.winnerPaid", state.winnerPaid);
+  console.log("creditsScore", creditsScore.innerText);
+  console.log(targetValue);
+
+  function updateNumber(elementId, newValue) {
+    const el = document.getElementById(elementId);
+    const oldValue = parseInt(el.innerText);
+
+    if (oldValue === newValue) return; // no change
+
+    el.classList.add("rolling"); // apply the rolling animation
+
+    setTimeout(() => {
+      el.innerText = newValue; // update the number after animation ends
+      el.classList.remove("rolling"); // remove the rolling animation class
+    }, 500); // assume the animation duration is 500ms
+  }
+
+  updateNumber("winnerPaid", 0); // updates the value of 'winnerPaid' to 0 with rolling effect
 
   (state.winnerPaid = 0), (winnerPaidScore.innerText = state.winnerPaid);
+  console.log(state.winnerPaid);
 };
 
 /*----- event listeners -----*/

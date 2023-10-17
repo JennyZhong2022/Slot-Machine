@@ -2,18 +2,23 @@
   box-sizing: border-box;
 }
 
-html {
-  padding: 0;
-  margin: 0;
-}
-
 body {
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: papayawhip;
+  background-color: rgb(43, 39, 39);
+  padding: 0;
+  margin: 0;
+}
+
+h1 {
+  font-family: "Dancing Script", cursive;
+  font-weight: 900;
+  font-size: 4rem;
+  margin: 20px 0 5px;
+  color: blanchedalmond;
 }
 
 main {
@@ -22,14 +27,33 @@ main {
   /* border-radius: 15%;
   border: 1px solid rgb(120, 156, 227);
   box-shadow: rgb(91, 141, 244) 0px 2px 8px 4px; */
+
   display: grid;
   grid-template-rows: 62% 4% 17% 17%;
 }
 
-main > section {
+.slotsWithRedLine {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+}
+
+.slotsWithRedLine .redLine {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 3px;
+  width: 100%;
+  background-color: rgb(214, 45, 45);
+}
+
+main .slotsWithRedLine > section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 #slotScreen,
@@ -47,11 +71,13 @@ main > section {
   height: 1vmin;
   width: 80%;
   margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  color: rgb(140, 134, 134);
   font-size: large;
   text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  font-family: "Pixelify Sans", sans-serif;
+  font-weight: 800;
 }
 
 #scoreScreen {
@@ -60,9 +86,12 @@ main > section {
 }
 
 #slotScreen > div {
+  background-color: white;
   height: 38vmin;
   width: 30%;
-  border: 4px solid rgb(60, 60, 60);
+  border: 4px solid rgb(15, 15, 14);
+  box-shadow: 0 0 0 4px rgb(133, 118, 118);
+  border-radius: 5%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -72,14 +101,38 @@ main > section {
   height: 10vmin;
   width: 80%;
   margin: 0 auto;
-  border: 4px solid rgb(60, 60, 60);
+  border: 4px solid rgb(140, 134, 134);
+  border-radius: 5%;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  font-size: 70px;
+  color: blanchedalmond;
+  font-family: "Pixelify Sans", sans-serif;
+  font-weight: 700;
+  overflow: hidden;
 }
 
 #scoreScreen #creditsPlayed {
   width: 40%;
+}
+
+@keyframes roll {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+.rolling {
+  animation: roll 0.5s forwards;
+}
+
+.digits {
+  transition: transform 0.5s ease-in-out;
 }
 
 button {
@@ -92,9 +145,10 @@ button {
   font-family: "JetBrains Mono", monospace;
   height: 68px;
   padding: 0 28px;
-  font-size: 24px;
+  font-size: 30px;
   touch-action: manipulation;
   transition: box-shadow 0.15s, transform 0.15s;
+  font-weight: 800;
   box-shadow: rgba(45, 35, 66, 0.5) 0 2px 6px,
     rgba(45, 35, 66, 0.4) 0 10px 20px -5px, #d6d6e7 0 -3px 0 inset;
 }
@@ -113,4 +167,10 @@ button:hover {
 button:active {
   box-shadow: #d6d6e7 0 5px 10px inset;
   transform: translateY(2px);
+}
+
+button:disabled {
+  color: #e0e0e0;
+  cursor: not-allowed;
+  box-shadow: none;
 }
