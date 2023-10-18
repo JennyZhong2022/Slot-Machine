@@ -86,6 +86,8 @@ const spinButton = document.querySelector("#spin");
 
 const replayButton = document.querySelector("#replay");
 
+const musicButton = document.querySelector("#sound");
+
 /*----- functions -----*/
 
 // slotScreen needs to random inside pictures
@@ -194,6 +196,9 @@ const winnerAndCreditPlayedScoreReset = () => {
   let currentCredits = parseInt(creditsScore.innerText, 10);
   const incrementValue = parseInt(winnerPaidScore.innerText, 10);
   const targetValue = currentCredits + incrementValue;
+  if (incrementValue > 0) {
+    spinButton.setAttribute("disabled", "");
+  }
 
   interval = setInterval(() => {
     // Only increment if winnerPaidScore is greater than 0
@@ -201,9 +206,9 @@ const winnerAndCreditPlayedScoreReset = () => {
       currentCredits++;
       creditsScore.innerText = currentCredits;
     }
-    spinButton.setAttribute("disabled", "");
+
     // Stop when reaching the target
-    if (currentCredits >= targetValue) {
+    if (currentCredits >= targetValue || incrementValue === 0) {
       clearInterval(interval);
       spinButton.removeAttribute("disabled");
     }
@@ -253,6 +258,8 @@ const replayHandler = () => {
   thirdSlotImg.src = slotScreenArraysWithImages[0][0].src;
 };
 
+const musicHandler = () => {};
+
 /*----- event listeners -----*/
 
 betOneButton.addEventListener("click", addCreditsPlayed);
@@ -264,3 +271,5 @@ spinButton.addEventListener("click", () =>
 );
 
 replayButton.addEventListener("click", replayHandler);
+
+musicButton.addEventListener("click", musicHandler);
