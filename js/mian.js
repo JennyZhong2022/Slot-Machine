@@ -84,6 +84,8 @@ const betMaxButton = document.querySelector("#betMax");
 
 const spinButton = document.querySelector("#spin");
 
+const replayButton = document.querySelector("#replay");
+
 /*----- functions -----*/
 
 // slotScreen needs to random inside pictures
@@ -186,20 +188,20 @@ const handleSpin = (cd) => {
 };
 
 // callback function below to reset the scores
+let interval;
 
 const winnerAndCreditPlayedScoreReset = () => {
   let currentCredits = parseInt(creditsScore.innerText, 10);
   const incrementValue = parseInt(winnerPaidScore.innerText, 10);
   const targetValue = currentCredits + incrementValue;
 
-  const interval = setInterval(() => {
+  interval = setInterval(() => {
     // Only increment if winnerPaidScore is greater than 0
     if (incrementValue > 0) {
-      spinButton.setAttribute("disabled", "");
       currentCredits++;
       creditsScore.innerText = currentCredits;
     }
-
+    spinButton.setAttribute("disabled", "");
     // Stop when reaching the target
     if (currentCredits >= targetValue) {
       clearInterval(interval);
@@ -226,13 +228,29 @@ const winnerAndCreditPlayedScoreReset = () => {
     setTimeout(() => {
       el.innerText = newValue; // update the number after animation ends
       el.classList.remove("rolling"); // remove the rolling animation class
-    }, 500); // assume the animation duration is 500ms
+    }, 1000); // assume the animation duration is 500ms
   }
 
   updateNumber("winnerPaid", 0); // updates the value of 'winnerPaid' to 0 with rolling effect
 
   (state.winnerPaid = 0), (winnerPaidScore.innerText = state.winnerPaid);
   console.log(state.winnerPaid);
+};
+
+const replayHandler = () => {
+  clearInterval(interval);
+  spinButton.removeAttribute("disabled");
+  state.credits = 100;
+  state.creditsPlayed = 0;
+  state.winnerPaid = 0;
+
+  winnerPaidScore.innerText = state.winnerPaid;
+  creditsScore.innerText = state.credits;
+  creditsPlayedScore.innerText = state.creditsPlayed;
+
+  firstSlotImg.src = slotScreenArraysWithImages[0][0].src;
+  secondSlotImg.src = slotScreenArraysWithImages[0][0].src;
+  thirdSlotImg.src = slotScreenArraysWithImages[0][0].src;
 };
 
 /*----- event listeners -----*/
@@ -244,3 +262,5 @@ betMaxButton.addEventListener("click", MaxCreditsPlayed);
 spinButton.addEventListener("click", () =>
   handleSpin(winnerAndCreditPlayedScoreReset)
 );
+
+replayButton.addEventListener("click", replayHandler);

@@ -49,6 +49,22 @@ main {
   background-color: rgb(214, 45, 45);
 }
 
+#replay {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -25%;
+  line-height: 40px;
+  text-align: center;
+}
+
+#sound {
+  position: relative;
+  bottom: 150%;
+  transform: translateY(150%);
+  left: -50%;
+}
+
 main .slotsWithRedLine > section {
   display: flex;
   justify-content: center;
@@ -89,8 +105,8 @@ main .slotsWithRedLine > section {
   background-color: white;
   height: 38vmin;
   width: 30%;
-  border: 4px solid rgb(15, 15, 14);
-  box-shadow: 0 0 0 4px rgb(133, 118, 118);
+  border: 6px solid rgb(15, 15, 14);
+  box-shadow: 0 0 0 6px rgb(133, 118, 118);
   border-radius: 5%;
   display: flex;
   justify-content: center;
@@ -143,7 +159,7 @@ button {
   color: #36395a;
   cursor: pointer;
   font-family: "JetBrains Mono", monospace;
-  height: 68px;
+  height: 58px;
   padding: 0 28px;
   font-size: 30px;
   touch-action: manipulation;
