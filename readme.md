@@ -44,7 +44,7 @@ This JavaScript file is responsible for controlling the slot machine game's func
 
 - **`spinHandler(resetScoresCallback)`**: The core function for spinning the slot machine. It randomizes the slot values, calculates the player's winnings, and updates the scores.
 
-- **`winnerAndCreditPlayedScoreReset()`**: Resets the winner and credits played scores with a rolling animation.
+- **`winnerAndCreditPlayedScoreReset()`**: This function simulates the accumulation of won credits to the player's total. As credits are added one-by-one, an audio cue plays for enhanced user feedback. Concurrently, the 'winnerPaid' score decreases incrementally to match the credits being added. During this process, the spin button is temporarily disabled to ensure smooth score updates. A visual rolling animation gives a lively effect similar to classic slot machines. Once all credits are transferred, the 'winnerPaid' score resets to 0, signaling the end of the payout process.
 
 - **`resetHandler()`**: Resets the entire game state, including all scores and slot images.
 

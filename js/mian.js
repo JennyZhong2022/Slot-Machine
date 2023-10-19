@@ -275,6 +275,11 @@ const winnerAndCreditPlayedScoreReset = () => {
   updateNumber("winnerPaid", 0);
 };
 
+const stopAudio = (audioName, currentTime) => {
+  audioName.pause();
+  audioName.currentTime = currentTime;
+};
+
 const resetHandler = () => {
   clearInterval(interval);
   clearInterval(interval2);
@@ -295,11 +300,6 @@ const resetHandler = () => {
   musicImg.src = "./src/imgs/music-on.png";
   state.canPlayAudio = true;
 };
-
-function stopAudio(audioName, currentTime) {
-  audioName.pause();
-  audioName.currentTime = currentTime;
-}
 
 const musicHandler = () => {
   state.canPlayAudio = !state.canPlayAudio;
