@@ -4,20 +4,20 @@ const url = {
   cashRegisterPurchase: "./src/music/cash-register-purchase-87313.mp3",
   slotMachinePayout: "./src/music/slot-machine-payout-81725.mp3",
   spinReel: "./src/music/switch-150130.mp3",
-  jakePot: "./src/music/slot-machine-jackpot.mp3",
+  jackPot: "./src/music/slot-machine-jackpot.mp3",
 };
 
 const cashRegisterAudio = new Audio(url.cashRegisterPurchase);
 const slotMachinePayoutAudio = new Audio(url.slotMachinePayout);
 const spinReelAudio = new Audio(url.spinReel);
-const jakePotAudio = new Audio(url.jakePot);
+const jackPotAudio = new Audio(url.jackPot);
 
 /*----- app's state (variables) -----*/
 
 const slotScreenArrays = [
   ["casino", 7, "diamond", "machine", "apple", "lemon", "cherry"],
-  ["casino", 7, "diamond", "machine", , "apple", "lemon", "cherry"],
-  ["casino", 7, "diamond", "machine", , "apple", "lemon", "cherry"],
+  ["casino", 7, "diamond", "machine", "apple", "lemon", "cherry"],
+  ["casino", 7, "diamond", "machine", "apple", "lemon", "cherry"],
   // ["casino", "casino", "cherry"],
   // ["casino", "casino", "cherry"],
   // ["casino", "casino", "cherry"],
@@ -54,7 +54,6 @@ const slotScreenArraysWithImages = slotScreenArrays.map((subArray) => {
   });
 });
 
-console.log(slotScreenArraysWithImages);
 /*----- cached element references -----*/
 
 const firstSlotBox = document.querySelector("#firstSlotBox");
@@ -111,20 +110,28 @@ const init = () => {
 
 init();
 
-// slotScreen needs to random inside pictures
+const audioPlayTime = (audioName, currentTime, timeLength) => {
+  audioName.currentTime = currentTime;
+  state.canPlayAudio && audioName.play();
+  setTimeout(() => {
+    audioName.pause();
+    audioName.currentTime = currentTime;
+  }, timeLength);
+};
 
 const addCreditsPlayed = () => {
+  audioPlayTime(cashRegisterAudio, 0, 500);
   state.creditsPlayed = (state.creditsPlayed % 3) + 1;
   creditsPlayedScore.innerText = state.creditsPlayed;
 };
 
-// cb will be spin function
 const MaxCreditsPlayed = () => {
-  state.creditsPlayed = 3; // Set state.creditsPlayed to 3
-  creditsPlayedScore.innerText = state.creditsPlayed; // Call the callback function
+  audioPlayTime(cashRegisterAudio, 0, 500);
+  state.creditsPlayed = 3;
+  creditsPlayedScore.innerText = state.creditsPlayed;
 };
 
-const spinHandler = (cd) => {
+const spinHandler = (resetScoresCallback) => {
   if (state.creditsPlayed === 0) return;
 
   // random pics will show inside each slot box
@@ -149,10 +156,6 @@ const spinHandler = (cd) => {
   if (thirdSlotImg) {
     thirdSlotImg.src = thirdValue.src;
   }
-
-  console.log(firstValue);
-  console.log(secondValue);
-  console.log(thirdValue);
 
   // credits calculation
 
@@ -184,16 +187,15 @@ const spinHandler = (cd) => {
   if (firstKey === secondKey && secondKey === thirdKey) {
     payout = payoutMapping[firstKey] || 0;
 
-    state.canPlayAudio && jakePotAudio.play();
+    state.canPlayAudio && jackPotAudio.play();
     setTimeout(() => {
-      jakePotAudio.pause();
-      jakePotAudio.currentTime = 0;
+      jackPotAudio.pause();
+      jackPotAudio.currentTime = 0;
     }, 3000);
   } else {
     const cherryCount = [firstKey, secondKey, thirdKey].filter(
       (value) => value === "cherry"
     ).length;
-    // console.log(cherryCount);
 
     if (cherryCount === 2) {
       payout = 5;
@@ -211,9 +213,8 @@ const spinHandler = (cd) => {
   (state.creditsPlayed = 0),
     (creditsPlayedScore.innerText = state.creditsPlayed),
     // callback function to reset the scores
-
     setTimeout(() => {
-      cd();
+      resetScoresCallback();
     }, 1000);
 };
 
@@ -249,14 +250,6 @@ const winnerAndCreditPlayedScoreReset = () => {
     }
   }, 200);
 
-  // creditsScore.innerText =
-  //   parseInt(creditsScore.innerText) + parseInt(winnerPaidScore.innerText);
-
-  console.log("winnerPaidScore", winnerPaidScore.innerText);
-  console.log("state.winnerPaid", state.winnerPaid);
-  console.log("creditsScore", creditsScore.innerText);
-  console.log(targetValue);
-
   function updateNumber(elementId, newValue) {
     const el = document.getElementById(elementId);
     let currentValue = parseInt(el.innerText);
@@ -274,15 +267,12 @@ const winnerAndCreditPlayedScoreReset = () => {
         clearInterval(interval2); // stop when reaching the target value
         el.classList.remove("rolling"); // remove the rolling animation class
       }
-    }, 200); // adjust this duration to make the decrement faster or slower
+    }, 200);
   }
 
   // updates the value of 'winnerPaid' to 0 with rolling effect
-  console.log(winnerPaidScore.innerText);
-  updateNumber("winnerPaid", 0);
 
-  // (state.winnerPaid = 0), (winnerPaidScore.innerText = state.winnerPaid);
-  console.log(state.winnerPaid);
+  updateNumber("winnerPaid", 0);
 };
 
 const resetHandler = () => {
@@ -301,7 +291,7 @@ const resetHandler = () => {
   thirdSlotImg.src = slotScreenArraysWithImages[0][0].src;
 
   stopAudio(slotMachinePayoutAudio, 0);
-  stopAudio(jakePotAudio, 0);
+  stopAudio(jackPotAudio, 0);
   musicImg.src = "./src/imgs/music-on.png";
   state.canPlayAudio = true;
 };
@@ -316,7 +306,7 @@ const musicHandler = () => {
   stopAudio(cashRegisterAudio, 0);
   stopAudio(slotMachinePayoutAudio, 0);
   stopAudio(spinReelAudio, 0);
-  stopAudio(jakePotAudio, 0);
+  stopAudio(jackPotAudio, 0);
   state.canPlayAudio
     ? (musicImg.src = "./src/imgs/music-on.png")
     : (musicImg.src = "./src/imgs/music-off.png");
@@ -329,26 +319,11 @@ const tableHandler = () => {
   });
 };
 
-const audioPlayTime = (audioName, currentTime, timeLength) => {
-  audioName.currentTime = currentTime;
-  state.canPlayAudio && audioName.play();
-  setTimeout(() => {
-    audioName.pause();
-    audioName.currentTime = currentTime;
-  }, timeLength);
-};
-
 /*----- event listeners -----*/
 
-betOneButton.addEventListener("click", () => {
-  audioPlayTime(cashRegisterAudio, 0, 500);
-  addCreditsPlayed();
-});
+betOneButton.addEventListener("click", addCreditsPlayed);
 
-betMaxButton.addEventListener("click", () => {
-  audioPlayTime(cashRegisterAudio, 0, 500);
-  MaxCreditsPlayed();
-});
+betMaxButton.addEventListener("click", MaxCreditsPlayed);
 
 spinButton.addEventListener("click", () => {
   audioPlayTime(spinReelAudio, 0, 500);
