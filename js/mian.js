@@ -302,7 +302,7 @@ const resetHandler = () => {
 
   stopAudio(slotMachinePayoutAudio, 0);
   stopAudio(jakePotAudio, 0);
-  musicImg.src = "../src/imgs/music-on.png";
+  musicImg.src = "./src/imgs/music-on.png";
   state.canPlayAudio = true;
 };
 
@@ -318,8 +318,8 @@ const musicHandler = () => {
   stopAudio(spinReelAudio, 0);
   stopAudio(jakePotAudio, 0);
   state.canPlayAudio
-    ? (musicImg.src = "../src/imgs/music-on.png")
-    : (musicImg.src = "../src/imgs/music-off.png");
+    ? (musicImg.src = "./src/imgs/music-on.png")
+    : (musicImg.src = "./src/imgs/music-off.png");
 };
 
 const tableHandler = () => {
