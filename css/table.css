@@ -8,10 +8,62 @@ body {
 }
 
 .secondPage {
-  background-color: rgb(15, 15, 15);
+  background-color: rgb(47, 44, 44);
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+table {
+  width: 65%;
+  background-color: rgb(245, 243, 241);
+  color: blanchedalmond;
+  font-family: Arial, sans-serif;
+  border: 6px solid rgb(15, 15, 14);
+  box-shadow: 0 0 0 6px rgb(133, 118, 118);
+  border-radius: 2%;
+}
+
+th {
+  padding: 15px;
+}
+
+td {
+  padding: 5px;
+}
+
+th,
+td {
+  text-align: center;
+  border: 1px solid black;
+  border-radius: 5%;
+}
+
+thead {
+  background-color: rgb(43, 39, 39);
+}
+
+th {
+  font-size: 32px;
+}
+
+td {
+  font-size: 30px;
+  background-color: rgb(43, 39, 39);
+}
+
+td img {
+  width: 50px;
+  height: auto;
+}
+
+tr:nth-child(odd) td {
+  background-color: rgb(133, 118, 118);
+}
+
+td:last-child {
+  color: blanchedalmond;
+  font-weight: bold;
 }

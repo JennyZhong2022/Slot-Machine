@@ -15,12 +15,12 @@ const jakePotAudio = new Audio(url.jakePot);
 /*----- app's state (variables) -----*/
 
 const slotScreenArrays = [
-  // [casino, 7, "diamond", "machine", "apple", "lemon", "cherry"],
-  // [casino, 7, "diamond", "machine", , "apple", "lemon", "cherry"],
-  // [casino, 7, "diamond", "machine", , "apple", "lemon", "cherry"],
-  ["casino", "casino", "cherry"],
-  ["casino", "casino", "cherry"],
-  ["casino", "casino", "cherry"],
+  ["casino", 7, "diamond", "machine", "apple", "lemon", "cherry"],
+  ["casino", 7, "diamond", "machine", , "apple", "lemon", "cherry"],
+  ["casino", 7, "diamond", "machine", , "apple", "lemon", "cherry"],
+  // ["casino", "casino", "cherry"],
+  // ["casino", "casino", "cherry"],
+  // ["casino", "casino", "cherry"],
 ];
 
 const imageLookup = {
