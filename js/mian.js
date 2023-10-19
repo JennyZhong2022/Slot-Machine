@@ -188,7 +188,7 @@ const spinHandler = (cd) => {
     setTimeout(() => {
       jakePotAudio.pause();
       jakePotAudio.currentTime = 0;
-    }, 1000);
+    }, 3000);
   } else {
     const cherryCount = [firstKey, secondKey, thirdKey].filter(
       (value) => value === "cherry"
@@ -302,6 +302,7 @@ const resetHandler = () => {
 
   stopAudio(slotMachinePayoutAudio, 0);
   stopAudio(jakePotAudio, 0);
+  musicImg.src = "../src/imgs/music-on.png";
   state.canPlayAudio = true;
 };
 
