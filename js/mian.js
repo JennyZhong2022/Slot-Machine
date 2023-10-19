@@ -1,10 +1,10 @@
 /*----- constants -----*/
 
 const url = {
-  cashRegisterPurchase: "../src/music/cash-register-purchase-87313.mp3",
-  slotMachinePayout: "../src/music/slot-machine-payout-81725.mp3",
-  spinReel: "../src/music/switch-150130.mp3",
-  jakePot: "../src/music/slot-machine-jackpot.mp3",
+  cashRegisterPurchase: "./src/music/cash-register-purchase-87313.mp3",
+  slotMachinePayout: "./src/music/slot-machine-payout-81725.mp3",
+  spinReel: "./src/music/switch-150130.mp3",
+  jakePot: "./src/music/slot-machine-jackpot.mp3",
 };
 
 const cashRegisterAudio = new Audio(url.cashRegisterPurchase);
@@ -33,13 +33,13 @@ const imageLookup = {
   cherry: new Image(),
 };
 
-imageLookup["casino"].src = "../src/imgs/casino-chip.png";
-imageLookup["7"].src = "../src/imgs/seven.png";
-imageLookup["diamond"].src = "../src/imgs/diamond.png";
-imageLookup["machine"].src = "../src/imgs/machine.png";
-imageLookup["apple"].src = "../src/imgs/apple.png";
-imageLookup["lemon"].src = "../src/imgs/lemon.png";
-imageLookup["cherry"].src = "../src/imgs/cherries.png";
+imageLookup["casino"].src = "./src/imgs/casino-chip.png";
+imageLookup["7"].src = "./src/imgs/seven.png";
+imageLookup["diamond"].src = "./src/imgs/diamond.png";
+imageLookup["machine"].src = "./src/imgs/machine.png";
+imageLookup["apple"].src = "./src/imgs/apple.png";
+imageLookup["lemon"].src = "./src/imgs/lemon.png";
+imageLookup["cherry"].src = "./src/imgs/cherries.png";
 
 const state = {
   winnerPaid: 0,
