@@ -48,6 +48,8 @@ This JavaScript file is responsible for controlling the slot machine game's func
 
 - **`resetHandler()`**: Resets the entire game state, including all scores and slot images.
 
+- **`musicHandler()`**: Turn the game's audio on or off based on the player's preference. Updates the music control icon in the UI.
+
 - **`tableHandler()`**: Scrolls the user's view to the game's payout table.
 
 ## Event Listeners
