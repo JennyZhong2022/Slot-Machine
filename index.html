@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/table.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
@@ -12,39 +13,47 @@
     <script defer src="/js/mian.js"></script>
   </head>
   <body>
-    <h1 class="animate__animated animate__bounce">FreeSlots</h1>
-    <main>
-      <div class="slotsWithRedLine">
-        <section id="slotScreen">
-          <div id="firstSlotBox"></div>
-          <div id="secondSlotBox"></div>
-          <div id="thirdSlotBox"></div>
-        </section>
-        <div class="redLine">
-          <button id="replay">Replay</button>
-          <button id="sound">
-            <img src="./imgs/musical-note.png" alt="" />
-          </button>
+    <div class="firstPage">
+      <h1 class="animate__animated animate__bounce">FreeSlots</h1>
+      <main>
+        <div class="slotsWithRedLine">
+          <section id="slotScreen">
+            <div id="firstSlotBox"></div>
+            <div id="secondSlotBox"></div>
+            <div id="thirdSlotBox"></div>
+          </section>
+          <div class="redLine">
+            <button id="replay">RESET</button>
+            <button id="sound">
+              <img id="musicImg" src="./src/imgs/music-on.png" alt="music" />
+            </button>
+          </div>
         </div>
-      </div>
 
-      <section id="scoreText">
-        <p>Winner Paid</p>
-        <p>credits</p>
-        <p>credits played</p>
-      </section>
+        <section id="scoreText">
+          <p>Winner Paid</p>
+          <p>credits</p>
+          <p>credits played</p>
+        </section>
 
-      <section id="scoreScreen">
-        <div id="winnerPaid" class="digits"></div>
-        <div id="credits" class="digits"></div>
-        <div id="creditsPlayed" class="digits"></div>
-      </section>
+        <section id="scoreScreen">
+          <div id="winnerPaid" class="digits"></div>
+          <div id="credits" class="digits"></div>
+          <div id="creditsPlayed" class="digits"></div>
+        </section>
 
-      <section id="buttons">
-        <button id="betOne">BET ONE</button>
-        <button id="betMax">BET MAX</button>
-        <button id="spin">SHUFFLE</button>
-      </section>
-    </main>
+        <section id="buttons">
+          <button id="playTable">
+            <img src="./src/imgs/table.png" alt="" />
+          </button>
+          <button id="betOne">BET ONE</button>
+          <button id="betMax">BET MAX</button>
+          <button id="spin">SPIN</button>
+        </section>
+      </main>
+    </div>
+    <div class="secondPage">
+      <img src="./src/imgs/table.jpg" alt="" />
+    </div>
   </body>
 </html>

@@ -1,18 +1,30 @@
 /*----- constants -----*/
 
+const url = {
+  cashRegisterPurchase: "../src/music/cash-register-purchase-87313.mp3",
+  slotMachinePayout: "../src/music/slot-machine-payout-81725.mp3",
+  spinReel: "../src/music/switch-150130.mp3",
+  jakePot: "../src/music/slot-machine-jackpot.mp3",
+};
+
+const cashRegisterAudio = new Audio(url.cashRegisterPurchase);
+const slotMachinePayoutAudio = new Audio(url.slotMachinePayout);
+const spinReelAudio = new Audio(url.spinReel);
+const jakePotAudio = new Audio(url.jakePot);
+
 /*----- app's state (variables) -----*/
 
 const slotScreenArrays = [
-  [25, 7, "diamond", "machine", "apple", "lemon", "cherry"],
-  [25, 7, "diamond", "machine", , "apple", "lemon", "cherry"],
-  [25, 7, "diamond", "machine", , "apple", "lemon", "cherry"],
-  // [25, 7, "cherry"],
-  // [25, 7, "cherry"],
-  // [25, 7, "cherry"],
+  // [casino, 7, "diamond", "machine", "apple", "lemon", "cherry"],
+  // [casino, 7, "diamond", "machine", , "apple", "lemon", "cherry"],
+  // [casino, 7, "diamond", "machine", , "apple", "lemon", "cherry"],
+  ["casino", "casino", "cherry"],
+  ["casino", "casino", "cherry"],
+  ["casino", "casino", "cherry"],
 ];
 
 const imageLookup = {
-  25: new Image(),
+  casino: new Image(),
   7: new Image(),
   diamond: new Image(),
   machine: new Image(),
@@ -21,18 +33,19 @@ const imageLookup = {
   cherry: new Image(),
 };
 
-imageLookup["25"].src = "../imgs/casino-chip.png";
-imageLookup["7"].src = "../imgs/seven.png";
-imageLookup["diamond"].src = "../imgs/diamond.png";
-imageLookup["machine"].src = "../imgs/machine.png";
-imageLookup["apple"].src = "../imgs/apple.png";
-imageLookup["lemon"].src = "../imgs/lemon.png";
-imageLookup["cherry"].src = "../imgs/cherries.png";
+imageLookup["casino"].src = "../src/imgs/casino-chip.png";
+imageLookup["7"].src = "../src/imgs/seven.png";
+imageLookup["diamond"].src = "../src/imgs/diamond.png";
+imageLookup["machine"].src = "../src/imgs/machine.png";
+imageLookup["apple"].src = "../src/imgs/apple.png";
+imageLookup["lemon"].src = "../src/imgs/lemon.png";
+imageLookup["cherry"].src = "../src/imgs/cherries.png";
 
 const state = {
   winnerPaid: 0,
   credits: 100,
   creditsPlayed: 0,
+  canPlayAudio: true,
 };
 
 const slotScreenArraysWithImages = slotScreenArrays.map((subArray) => {
@@ -70,12 +83,6 @@ const creditsScore = document.querySelector("#credits");
 
 const creditsPlayedScore = document.querySelector("#creditsPlayed");
 
-creditsPlayedScore.innerText = state.creditsPlayed;
-
-creditsScore.innerText = state.credits;
-
-winnerPaidScore.innerText = state.winnerPaid;
-
 /*----- cached element references -----*/
 
 const betOneButton = document.querySelector("#betOne");
@@ -88,7 +95,21 @@ const replayButton = document.querySelector("#replay");
 
 const musicButton = document.querySelector("#sound");
 
+const musicImg = document.querySelector("#musicImg");
+
+const tableButton = document.querySelector("#playTable");
+
 /*----- functions -----*/
+
+const init = () => {
+  creditsPlayedScore.innerText = state.creditsPlayed;
+
+  creditsScore.innerText = state.credits;
+
+  winnerPaidScore.innerText = state.winnerPaid;
+};
+
+init();
 
 // slotScreen needs to random inside pictures
 
@@ -103,7 +124,7 @@ const MaxCreditsPlayed = () => {
   creditsPlayedScore.innerText = state.creditsPlayed; // Call the callback function
 };
 
-const handleSpin = (cd) => {
+const spinHandler = (cd) => {
   if (state.creditsPlayed === 0) return;
 
   // random pics will show inside each slot box
@@ -136,13 +157,13 @@ const handleSpin = (cd) => {
   // credits calculation
 
   const payoutMapping = {
-    25: 100,
+    casino: 100,
     7: 50,
     diamond: 30,
     machine: 20,
     apple: 10,
     lemon: 10,
-    cherry: 5,
+    cherry: 10,
   };
 
   const getKeyByValue = (object, value) => {
@@ -162,6 +183,12 @@ const handleSpin = (cd) => {
 
   if (firstKey === secondKey && secondKey === thirdKey) {
     payout = payoutMapping[firstKey] || 0;
+
+    state.canPlayAudio && jakePotAudio.play();
+    setTimeout(() => {
+      jakePotAudio.pause();
+      jakePotAudio.currentTime = 0;
+    }, 1000);
   } else {
     const cherryCount = [firstKey, secondKey, thirdKey].filter(
       (value) => value === "cherry"
@@ -184,6 +211,7 @@ const handleSpin = (cd) => {
   (state.creditsPlayed = 0),
     (creditsPlayedScore.innerText = state.creditsPlayed),
     // callback function to reset the scores
+
     setTimeout(() => {
       cd();
     }, 1000);
@@ -191,18 +219,21 @@ const handleSpin = (cd) => {
 
 // callback function below to reset the scores
 let interval;
+let interval2;
 
 const winnerAndCreditPlayedScoreReset = () => {
   let currentCredits = parseInt(creditsScore.innerText, 10);
   const incrementValue = parseInt(winnerPaidScore.innerText, 10);
   const targetValue = currentCredits + incrementValue;
-  if (incrementValue > 0) {
+  if (incrementValue) {
     spinButton.setAttribute("disabled", "");
   }
 
+  clearInterval(interval);
   interval = setInterval(() => {
     // Only increment if winnerPaidScore is greater than 0
-    if (incrementValue > 0) {
+    if (incrementValue) {
+      state.canPlayAudio && slotMachinePayoutAudio.play();
       currentCredits++;
       creditsScore.innerText = currentCredits;
     }
@@ -210,9 +241,13 @@ const winnerAndCreditPlayedScoreReset = () => {
     // Stop when reaching the target
     if (currentCredits >= targetValue || incrementValue === 0) {
       clearInterval(interval);
+      setTimeout(() => {
+        slotMachinePayoutAudio.pause();
+        slotMachinePayoutAudio.currentTime = 0;
+      }, 500);
       spinButton.removeAttribute("disabled");
     }
-  }, 300);
+  }, 200);
 
   // creditsScore.innerText =
   //   parseInt(creditsScore.innerText) + parseInt(winnerPaidScore.innerText);
@@ -224,52 +259,103 @@ const winnerAndCreditPlayedScoreReset = () => {
 
   function updateNumber(elementId, newValue) {
     const el = document.getElementById(elementId);
-    const oldValue = parseInt(el.innerText);
+    let currentValue = parseInt(el.innerText);
 
-    if (oldValue === newValue) return; // no change
+    if (currentValue === newValue) return; // no change
 
     el.classList.add("rolling"); // apply the rolling animation
 
-    setTimeout(() => {
-      el.innerText = newValue; // update the number after animation ends
-      el.classList.remove("rolling"); // remove the rolling animation class
-    }, 1000); // assume the animation duration is 500ms
+    clearInterval(interval2);
+    interval2 = setInterval(() => {
+      if (currentValue > newValue) {
+        currentValue--;
+        el.innerText = currentValue;
+      } else {
+        clearInterval(interval2); // stop when reaching the target value
+        el.classList.remove("rolling"); // remove the rolling animation class
+      }
+    }, 200); // adjust this duration to make the decrement faster or slower
   }
 
-  updateNumber("winnerPaid", 0); // updates the value of 'winnerPaid' to 0 with rolling effect
+  // updates the value of 'winnerPaid' to 0 with rolling effect
+  console.log(winnerPaidScore.innerText);
+  updateNumber("winnerPaid", 0);
 
-  (state.winnerPaid = 0), (winnerPaidScore.innerText = state.winnerPaid);
+  // (state.winnerPaid = 0), (winnerPaidScore.innerText = state.winnerPaid);
   console.log(state.winnerPaid);
 };
 
-const replayHandler = () => {
+const resetHandler = () => {
   clearInterval(interval);
+  clearInterval(interval2);
   spinButton.removeAttribute("disabled");
+  winnerPaidScore.classList.remove("rolling");
   state.credits = 100;
   state.creditsPlayed = 0;
   state.winnerPaid = 0;
 
-  winnerPaidScore.innerText = state.winnerPaid;
-  creditsScore.innerText = state.credits;
-  creditsPlayedScore.innerText = state.creditsPlayed;
+  init();
 
   firstSlotImg.src = slotScreenArraysWithImages[0][0].src;
   secondSlotImg.src = slotScreenArraysWithImages[0][0].src;
   thirdSlotImg.src = slotScreenArraysWithImages[0][0].src;
+
+  stopAudio(slotMachinePayoutAudio, 0);
+  stopAudio(jakePotAudio, 0);
+  state.canPlayAudio = true;
 };
 
-const musicHandler = () => {};
+function stopAudio(audioName, currentTime) {
+  audioName.pause();
+  audioName.currentTime = currentTime;
+}
+
+const musicHandler = () => {
+  state.canPlayAudio = !state.canPlayAudio;
+  stopAudio(cashRegisterAudio, 0);
+  stopAudio(slotMachinePayoutAudio, 0);
+  stopAudio(spinReelAudio, 0);
+  stopAudio(jakePotAudio, 0);
+  state.canPlayAudio
+    ? (musicImg.src = "../src/imgs/music-on.png")
+    : (musicImg.src = "../src/imgs/music-off.png");
+};
+
+const tableHandler = () => {
+  window.scroll({
+    top: window.innerHeight,
+    behavior: "smooth",
+  });
+};
+
+const audioPlayTime = (audioName, currentTime, timeLength) => {
+  audioName.currentTime = currentTime;
+  state.canPlayAudio && audioName.play();
+  setTimeout(() => {
+    audioName.pause();
+    audioName.currentTime = currentTime;
+  }, timeLength);
+};
 
 /*----- event listeners -----*/
 
-betOneButton.addEventListener("click", addCreditsPlayed);
+betOneButton.addEventListener("click", () => {
+  audioPlayTime(cashRegisterAudio, 0, 500);
+  addCreditsPlayed();
+});
 
-betMaxButton.addEventListener("click", MaxCreditsPlayed);
+betMaxButton.addEventListener("click", () => {
+  audioPlayTime(cashRegisterAudio, 0, 500);
+  MaxCreditsPlayed();
+});
 
-spinButton.addEventListener("click", () =>
-  handleSpin(winnerAndCreditPlayedScoreReset)
-);
+spinButton.addEventListener("click", () => {
+  audioPlayTime(spinReelAudio, 0, 500);
+  spinHandler(winnerAndCreditPlayedScoreReset);
+});
 
-replayButton.addEventListener("click", replayHandler);
+replayButton.addEventListener("click", resetHandler);
 
 musicButton.addEventListener("click", musicHandler);
+
+tableButton.addEventListener("click", tableHandler);

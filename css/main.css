@@ -3,14 +3,17 @@
 }
 
 body {
+  background-color: rgb(43, 39, 39);
+  padding: 0;
+  margin: 0;
+}
+
+.firstPage {
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgb(43, 39, 39);
-  padding: 0;
-  margin: 0;
 }
 
 h1 {
@@ -62,7 +65,13 @@ main {
   position: relative;
   bottom: 150%;
   transform: translateY(150%);
-  left: -50%;
+  left: -40%;
+}
+
+#playTable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 main .slotsWithRedLine > section {
@@ -76,6 +85,7 @@ main .slotsWithRedLine > section {
 #buttons {
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 
 #scoreText {
@@ -136,10 +146,10 @@ main .slotsWithRedLine > section {
 
 @keyframes roll {
   from {
-    transform: translateY(100%);
+    transform: translateY(50%);
   }
   to {
-    transform: translateY(-100%);
+    transform: translateY(-50%);
   }
 }
 
