@@ -1,6 +1,7 @@
 # FreeSlots
 
-A simple, interactive slot machine game where users can bet and try their luck to win the jackpot!
+A simple, interactive slot machine game where users can bet and try their luck to win the jackpot! Let's [PLAY](https://jennyzhong2022.github.io/Slot-Machine/)
+
 
 ## Features
 
