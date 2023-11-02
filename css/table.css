@@ -5,7 +5,7 @@
 body {
   padding: 0;
   margin: 0;
-}
+}  
 
 .secondPage {
   background-color: rgb(47, 44, 44);
@@ -17,27 +17,28 @@ body {
 }
 
 table {
-  width: 65%;
+  width: 100%;
+  max-width: 800px;
   background-color: rgb(245, 243, 241);
   color: blanchedalmond;
   font-family: Arial, sans-serif;
-  border: 6px solid rgb(15, 15, 14);
-  box-shadow: 0 0 0 6px rgb(133, 118, 118);
+  border: 0.375rem solid rgb(15, 15, 14);
+  box-shadow: 0 0 0 0.375rem rgb(133, 118, 118);
   border-radius: 2%;
 }
 
 th {
-  padding: 15px;
+  padding: 0.938rem;
 }
 
 td {
-  padding: 5px;
+  padding: 0.313rem;
 }
 
 th,
 td {
   text-align: center;
-  border: 1px solid black;
+  border: 0.063px solid black;
   border-radius: 5%;
 }
 
@@ -46,16 +47,16 @@ thead {
 }
 
 th {
-  font-size: 32px;
+  font-size: 2rem;
 }
 
 td {
-  font-size: 30px;
+  font-size: 1.8rem;
   background-color: rgb(43, 39, 39);
 }
 
 td img {
-  width: 50px;
+  width: 3.125rem;
   height: auto;
 }
 
@@ -66,4 +67,50 @@ tr:nth-child(odd) td {
 td:last-child {
   color: blanchedalmond;
   font-weight: bold;
+}
+
+
+
+@media (max-width: 480px) {
+  th {
+    font-size: 1.5rem; 
+  }
+
+  td {
+    font-size: 0.75rem; 
+  }
+
+  td img {
+    width: 2.5rem; 
+  }
+}
+
+
+@media (min-width: 481px) and (max-width: 768px) {
+  th {
+    font-size: 1.75rem; 
+  }
+
+  td {
+    font-size: 0.875rem; 
+  }
+
+  td img {
+    width: 2.75rem; 
+  }
+}
+
+
+@media (min-width: 769px) and (max-width: 1279px) {
+  th {
+    font-size: 1.875rem;
+  }
+
+  td {
+    font-size: 0.95rem; 
+  }
+
+  td img {
+    width: 3rem; 
+  }
 }
