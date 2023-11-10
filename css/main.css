@@ -94,7 +94,7 @@ main .slotsWithRedLine > section {
   width: 80%;
   margin: 0 auto;
   color: rgb(140, 134, 134);
-  font-size:1.5rem;
+  font-size:1.3rem;
   text-transform: uppercase;
   display: flex;
   justify-content: center;
@@ -214,7 +214,7 @@ main {
     width: 70vmin;
 }
 #scoreText > p, button {
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 #scoreScreen > div {
     font-size: 3.5rem;
@@ -235,7 +235,7 @@ main {
     width: 60vmin;
 }
 #scoreText > p, button {
-    font-size: 1rem;
+    font-size: 0.6rem;
 }
 #scoreScreen > div {
     font-size: 3rem;
@@ -256,7 +256,7 @@ main {
     width: 50vmin;
 }
 #scoreText > p, button {
-    font-size: 1rem;
+    font-size: 0.5rem;
 }
 #scoreScreen > div {
     font-size: 2.5rem;
