@@ -1,11 +1,4 @@
-* {
-  box-sizing: border-box;
-}
 
-body {
-  padding: 0;
-  margin: 0;
-}  
 
 .secondPage {
   background-color: rgb(47, 44, 44);
@@ -71,7 +64,7 @@ td:last-child {
 
 
 
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   th {
     font-size: 1.5rem; 
   }
@@ -112,5 +105,12 @@ td:last-child {
 
   td img {
     width: 3rem; 
+  }
+} */
+
+
+@media (max-width: 480px) {
+  .secondPage {
+    display: none;
   }
 }
